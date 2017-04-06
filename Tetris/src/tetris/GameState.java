@@ -28,7 +28,7 @@ import java.awt.Graphics;
 public class GameState {
 
     // Array to keep track of what code has run in this class
-    public static boolean[] coverage = new boolean[50];
+    public static boolean[] coverage = new boolean[35];
 
     // Enum of the posible states
     public enum State {
@@ -81,7 +81,7 @@ public class GameState {
             if (untilLock != 0) {
                 coverage[4] = true;
                 untilLock--;
-            } else if (untilLock == 0) {
+            } else {
                 coverage[5] = true;
                 untilLock = 20;
                 lock();
@@ -104,7 +104,6 @@ public class GameState {
      */
     public void drop() {
         coverage[8] = true;
-
         if (currentTet.drop(this)) {
             coverage[9] = true;
             state = State.locking;
@@ -112,6 +111,7 @@ public class GameState {
     }
     
     public void drop(double gravity) {
+        coverage[10] = true;
         double old = this.gravity;
         this.gravity = gravity;
         drop();
@@ -123,7 +123,7 @@ public class GameState {
      * the stack
      */
     public void lock() {
-        coverage[10] = true;
+        coverage[11] = true;
 
         // Local grid coordinates of the blocks in the current rotation
         P2[] rot = currentTet.rotations[currentTet.rotationState];
@@ -131,6 +131,7 @@ public class GameState {
         P2 gridP = currentTet.convPoint();
 
         for (int i = 0; i < rot.length; i++) {
+            coverage[12] = true;
             // Global X, Y coordinate of the current block
             int x = (int) (rot[i].x + gridP.x);
             int y = (int) (rot[i].y + gridP.y);
@@ -146,32 +147,35 @@ public class GameState {
      * @return Boolean to say if lines need to be deleted or not
      */
     public boolean deleteLines() {
-        coverage[11] = true;
+        coverage[14] = true;
 
         resetLines();  // Resets the deletedLines array to -1
 
         int index = 0;  // Index of deletedLines
 
         for (int i = 0; i < stack.length; i++) {
+            coverage[15] = true;
             int numBlk = 0;  // Blocks in the row
             for (int j = 0; j < stack[i].length; j++) {
+                coverage[16] = true;
                 if (stack[i][j] != null) {
-                    coverage[12] = true;
+                    coverage[17] = true;
                     numBlk++;
                 }
             }
             if (numBlk == 10) {
-                coverage[13] = true;
+                coverage[18] = true;
                 deletedLines[index] = i;
                 index++;
             }
         }
         if (index > 0) {
-            coverage[14] = true;
+            coverage[19] = true;
             s.background(this);
             update(index);  // Updates the score based on the lines cleared
             return true;
         }
+        coverage[20] = true;
         return false;
     }
 
@@ -181,7 +185,7 @@ public class GameState {
      * @param lines Number of Lines cleared
      */
     public void update(int lines) {
-        coverage[15] = true;
+        coverage[21] = true;
         gp.update(this, lines);
     }
 
@@ -191,7 +195,7 @@ public class GameState {
      * @param dirc Direction to move False: Left, True: Right
      */
     public void horizontalMove(boolean dirc) {
-        coverage[16] = true;
+        coverage[22] = true;
         currentTet.horizontalMove(dirc, this);
     }
 
@@ -201,7 +205,7 @@ public class GameState {
      * @param dirc Direction to rotate False: counter-clockwise, True: clockwise
      */
     public void rotate(boolean dirc) {
-        coverage[17] = true;
+        coverage[23] = true;
         currentTet.rotate(dirc, this);
     }
 
@@ -213,21 +217,27 @@ public class GameState {
      * @param g The Graphics context
      */
     public void paint(Graphics g) {
-        coverage[18] = true;
+        coverage[24] = true;
         s.paint(this, g);
 
         if (state == State.animation) {
-            coverage[19] = true;
+            coverage[25] = true;
             if (s.animate(this, g)) {
-                coverage[20] = true;
+                coverage[26] = true;
                 for (int i : deletedLines) {
+                    coverage[27] = true;
                     if (i != -1) {
+                        coverage[28] = true;
                         for (int z = 0; z < 10; z++) {
+                            coverage[29] = true;
                             stack[i][z] = null;
                         }
                         for (int k = i-1; k >= 0; k--) {
+                            coverage[30] = true;
                             for (int j = 0; j < 10; j++) {
+                                coverage[31] = true;
                                 if (stack[k][j] != null) {
+                                    coverage[32] = true;
                                     stack[k][j].y += 1;
                                     stack[k+1][j] = stack[k][j];
                                     stack[k][j] = null;
@@ -246,8 +256,9 @@ public class GameState {
      * Re-initialized deletedLines to -1
      */
     public void resetLines() {
-        coverage[23] = true;
+        coverage[33] = true;
         for (int i = 0; i < deletedLines.length; i++) {
+            coverage[34] = true;
             deletedLines[i] = -1;
         }
     }
@@ -255,21 +266,23 @@ public class GameState {
     /**
      * Test function for filling the well
      */
-    public void testWell() {
-        coverage[21] = true;
-        for (int i = stack.length-1; i > 10; i--) {
-            for (int j = 0; j < stack[i].length; j++) {
-                stack[i][j] = new Block(j, i, Color.red);
-            }
-        }
-    }
+//    public void testWell() {
+//        coverage[35] = true;
+//        for (int i = stack.length-1; i > 10; i--) {
+//            coverage[36] = true;
+//            for (int j = 0; j < stack[i].length; j++) {
+//                coverage[37] = true;
+//                stack[i][j] = new Block(j, i, Color.red);
+//            }
+//        }
+//    }
 
     /**
      * Test function for testing animation
      */
-    public void testAnim() {
-        coverage[22] = true;
-        deletedLines[0] = 3;
-        state = State.animation;
-    }
+//    public void testAnim() {
+//        coverage[38] = true;
+//        deletedLines[0] = 3;
+//        state = State.animation;
+//    }
 }

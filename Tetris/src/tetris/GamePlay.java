@@ -29,10 +29,7 @@ import java.util.Random;
 public class GamePlay {
 
     // Array to keep track of what code has run in this class
-    public static boolean[] coverage = new boolean[10];
-
-    // Random Number Generator
-    public static Random r = new Random();
+    public static boolean[] coverage = new boolean[14];
 
     /**
      * Used to update the level, gravity, score based on the number of lines
@@ -53,17 +50,20 @@ public class GamePlay {
             gs.gravity += (0.2 * gs.gravity);  // Increase Gravity
             switch (lines) {
                 case 1:
+                    coverage[2] = true;
                     gs.score += 1;
                     break;
                 case 2:
+                    coverage[3] = true;
                     gs.score += 2;
                     break;
                 case 3:
+                    coverage[4] = true;
                     gs.score += 4;
                     break;
                 case 4:
+                    coverage[5] = true;
                     gs.score += 8;
-                    break;
             }
         }
     }
@@ -76,36 +76,36 @@ public class GamePlay {
      * @param gs
      */
     public void nextTet(GameState gs) {
-        coverage[2] = true;
-        int rand = r.nextInt(7);  // Get a random number
+        coverage[6] = true;
+        int rand = new Random().nextInt(7);  // Get a random number
         P2 p = new P2(Block.WIDTH*4, Block.WIDTH*(-2));  // Default starting position
         switch (rand) {
             case 0:
-                coverage[3] = true;
+                coverage[7] = true;
                 gs.currentTet = Tetromino.tetO(p, Color.YELLOW);
                 break;
             case 1:
-                coverage[4] = true;
+                coverage[8] = true;
                 gs.currentTet = Tetromino.tetL(p, Color.ORANGE);
                 break;
             case 2:
-                coverage[5] = true;
+                coverage[9] = true;
                 gs.currentTet = Tetromino.tetS(p, Color.MAGENTA);
                 break;
             case 3:
-                coverage[6] = true;
+                coverage[10] = true;
                 gs.currentTet = Tetromino.tetZ(p, Color.GREEN);
                 break;
             case 4:
-                coverage[7] = true;
+                coverage[11] = true;
                 gs.currentTet = Tetromino.tetI(p, Color.RED);
                 break;
             case 5:
-                coverage[8] = true;
+                coverage[12] = true;
                 gs.currentTet = Tetromino.tetJ(p, Color.BLUE);
                 break;
             case 6:
-                coverage[9] = true;
+                coverage[13] = true;
                 gs.currentTet = Tetromino.tetT(p, Color.CYAN);
         }
     }

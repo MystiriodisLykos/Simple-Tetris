@@ -67,8 +67,6 @@ public class gui extends javax.swing.JFrame {
 
         @Override
         public void paint(Graphics g) {
-            //super.paintComponent(g); 
-            
             g.setColor(new Color (30, 30, 30));
             g.fillRect(0, 0, 650, 55);
 

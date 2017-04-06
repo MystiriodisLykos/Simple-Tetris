@@ -36,6 +36,7 @@ public class Fancy extends Skin {
 
     public Fancy() {
         super();
+        coverage[17] = true;
         this.animationFrame = 27;
         this.b = new GridBackground();
     }
@@ -49,14 +50,18 @@ public class Fancy extends Skin {
      */
     @Override
     public void paint(GameState gs, Graphics g) {
+        coverage[18] = true;
         b.paint(gs, (Graphics2D) g);
         Tetromino c = gs.currentTet;
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(4));
         // Loop through blocks inside the stack
         for (Block[] row : gs.stack) {
+            coverage[18] = true;
             for (Block bl : row) {
+                coverage[19] = true;
                 if (bl != null) {
+                    coverage[20] = true;
                     // If b is not null draw it
                     g2.setColor(bl.c);  // Sets color from Block b
                     // Draws a 26 x 26 rectangle Block b's X and Y
@@ -71,6 +76,7 @@ public class Fancy extends Skin {
             Tetromino and draws a square and border based of that.
          */
         for (int k = 0; k < 4; k++) {
+            coverage[21] = true;
             g2.setColor(c.c);  // Sets the color to the Tetromino color
             // Finds the grab point
             P2 tetBlockGrab = c.current.add((c.rotations[c.rotationState][k]).scale(26));
@@ -84,16 +90,20 @@ public class Fancy extends Skin {
 
     @Override
     public boolean animate(GameState gs, Graphics g) {
-
+        coverage[22] = true;
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(4));
 
         for (int i : gs.deletedLines) {
+            coverage[23] = true;
             if (i != -1) {
+                coverage[24] = true;
                 g2.setColor(Color.black);
                 g2.fillRect(0, i * Block.WIDTH, Block.WIDTH * 10, Block.WIDTH);
                 if (animationFrame > 0) {
+                    coverage[25] = true;
                     for (Block b : gs.stack[i]) {
+                        coverage[26] = true;
                         g2.setColor(b.c);
                         g2.fillRect(b.x * Block.WIDTH,
                                 b.y * Block.WIDTH + (Block.WIDTH - animationFrame),
@@ -107,9 +117,11 @@ public class Fancy extends Skin {
             }
         }
         if (animationFrame <= 0) {
+            coverage[27] = true;
             animationFrame = 27;
             return true;
         }
+        coverage[28] = true;
         animationFrame--;
         return false;
     }
