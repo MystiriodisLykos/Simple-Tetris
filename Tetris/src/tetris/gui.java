@@ -23,6 +23,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import tetris.Skins.Background.PlainBackground;
+import tetris.Skins.Skin;
 
 /**
  *
@@ -44,8 +46,6 @@ public class gui extends javax.swing.JFrame {
     public gui() {
         initComponents();
         addKeyListener(new InputKeyEvent());
-//        gs.testWell();
-//        gs.testAnim();
         clock.start();
 
     }
@@ -69,28 +69,65 @@ public class gui extends javax.swing.JFrame {
         public void paint(Graphics g) {
             g.setColor(new Color (30, 30, 30));
             g.fillRect(0, 0, 650, 55);
-
-            for (int i = 0; i < Tetromino.coverage.length; i++) {
-                if (Tetromino.coverage[i]) {
-                    g.setColor(Color.red);
-                    g.fillRect(i * 21, 0, 20, 20);
-                }
-
+            
+            double geomy = 0;
+            for (boolean b : Block.coverage) {
+                geomy = b ? geomy+1 : geomy;
             }
-            for (int i = 0; i < GameState.coverage.length; i++) {
-                if (GameState.coverage[i]) {
-                    g.setColor(Color.blue);
-                    g.fillRect(i * 21, 20, 20, 20);
-                }
-
+            for (boolean b : Tetromino.coverage) {
+                geomy = b ? geomy+1 : geomy;
             }
-            for (int i = 0; i < P2.coverage.length; i++) {
-                if (P2.coverage[i]) {
-                    g.setColor(Color.green);
-                    g.fillRect(i * 21, 40, 20, 20);
-                }
-
+            
+            double logic = geomy;
+            for (boolean b : GamePlay.coverage) {
+                logic = b ? logic+1 : logic;
             }
+            for (boolean b : GameState.coverage) {
+                logic = b ? logic+1 : logic;
+            }
+            
+            double skins = logic;
+            for (boolean b : Skin.coverage) {
+                skins = b ? skins+1 : skins;
+            }
+            for (boolean b : PlainBackground.coverage) {
+                skins = b ? skins+1 : skins;
+            }
+            
+            double other = skins;
+            for (boolean b : P2.coverage) {
+                other = b ? other+1 : other;
+            }
+            for (boolean b : InputKeyEvent.coverage) {
+                other = b ? other+1 : other;
+            }
+            
+            double total = geomy + logic + skins + other;
+            double length = Block.coverage.length + Tetromino.coverage.length +
+                    GamePlay.coverage.length + GameState.coverage.length +
+                    Skin.coverage.length + PlainBackground.coverage.length +
+                    P2.coverage.length + InputKeyEvent.coverage.length;
+            geomy /= total;
+            logic /= total;
+            skins /= total;
+            other /= total;
+            
+            double pixT = this.getWidth()*(total/length);
+            geomy *= pixT;
+            logic *= pixT;
+            skins *= pixT;
+            other *= pixT;
+            
+            int height = this.getHeight();
+            
+            g.setColor(Color.red);
+            g.fillRect(0, 0, (int)geomy, height);
+            g.setColor(Color.blue);
+            g.fillRect((int)geomy, 0, (int)logic, height);
+            g.setColor(Color.green);
+            g.fillRect((int)logic, 0, (int)skins, height);
+            g.setColor(Color.orange);
+            g.fillRect((int)skins, 0, (int)other, height);
         }
     }
 
