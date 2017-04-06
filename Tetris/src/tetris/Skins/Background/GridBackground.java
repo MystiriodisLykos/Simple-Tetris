@@ -27,24 +27,15 @@ import tetris.GameState;
  */
 public class GridBackground extends PlainBackground{
     
-    public GridBackground() {
-        super();
-    }
-    
-    public GridBackground(Color c) {
-        super(c);
-    }
-    
-    public GridBackground(Color[] bgs) {
-        super(bgs);
-    }
-    
     @Override
     public void paint(GameState gs, Graphics2D g) {
+        coverage[7] = true;
         g.setStroke(new BasicStroke(2));
 
         for (int i = 0; i < 520; i += 26) {
+            coverage[8] = true;
             for (int j = 0; j < 260; j += 26) {
+                coverage[9] = true;
                 Color c = this.bgs[this.currentB];
                 g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(),
                                 (int) (255 - (255 * ((520 - i) / 520f)))));

@@ -37,12 +37,13 @@ import tetris.Tetromino;
 public class Skin {
     // TODO: add coverage to fance
     // TODO: change coverage to a list
-    public static boolean[] coverage = new boolean[16];
+    public static boolean[] coverage = new boolean[29];
     
     public int animationFrame = 20;  // Number of frames for an animation
     public Background b;
     
     public Skin() {
+        coverage[0] = true;
         this.b = new PlainBackground();
     }
 
@@ -54,18 +55,18 @@ public class Skin {
      * @param g Graphics context
      */
     public void paint(GameState gs, Graphics g) {
-        coverage[0] = true;
+        coverage[1] = true;
         b.paint(gs, (Graphics2D) g);
         Tetromino c = gs.currentTet;
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(4));
         // Loop through blocks inside the stack
         for (Block[] row : gs.stack) {
-            coverage[1] = true;
+            coverage[2] = true;
             for (Block b : row) {
-                coverage[2] = true;
+                coverage[3] = true;
                 if (b != null) {
-                    coverage[3] = true;
+                    coverage[4] = true;
                     // If b is not null draw it
                     g2.setColor(b.c);  // Sets color from Block b
                     // Draws a 26 x 26 rectangle Block b's X and Y
@@ -78,7 +79,7 @@ public class Skin {
             Tetromino and draws a square and border based of that.
          */
         for (int k = 0; k < 4; k++) {
-            coverage[4] = true;
+            coverage[5] = true;
             g2.setColor(c.c);  // Sets the color to the Tetromino color
             // Finds the grab point
             P2 tetBlockGrab = c.current.add((c.rotations[c.rotationState][k]).scale(26));
@@ -99,9 +100,9 @@ public class Skin {
      * @return The boolean to say if the animation is done or not
      */
     public boolean animate(GameState gs, Graphics g) {
-        coverage[5] = true;
+        coverage[6] = true;
         if (animationFrame <= 0) {
-            coverage[6] = true;
+            coverage[7] = true;
             // If the animation is done return true
             animationFrame = 20;
             return true;
@@ -109,17 +110,17 @@ public class Skin {
 
         int[] lines = gs.deletedLines;  // Indecies of deleted lines
         if (animationFrame % 10 <= 5) {
-            coverage[7] = true;
+            coverage[8] = true;
             g.setColor(Color.WHITE);
         } else {
-            coverage[8] = true;
+            coverage[9] = true;
             g.setColor(Color.BLACK);
         }
 
         for (int i = 0; i < lines.length; i++) {
-            coverage[9] = true;
+            coverage[10] = true;
             if (lines[i] != -1) {
-                coverage[10] = true;
+                coverage[11] = true;
                 g.fillRect(0, lines[i] * 26, 260, 26);
             }
         }
@@ -133,17 +134,20 @@ public class Skin {
      * @param gs The current GameState
      */
     public void background(GameState gs) {
-        coverage[11] = true;
+        coverage[12] = true;
         
         int del = 0;
         for (int i: gs.deletedLines) {
+            coverage[13] = true;
             if (i != -1){
+                coverage[14] = true;
                 del++;
             }
         }
         
         if (Math.floor(gs.level/10f) < 
                 Math.floor((gs.level+del)/10f)) {
+            coverage[15] = true;
             b.change();
         }
     }

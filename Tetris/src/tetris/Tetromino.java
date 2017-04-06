@@ -26,7 +26,7 @@ import java.awt.Color;
 public class Tetromino {
 
     // Array to keep track of what code has run in this class
-    public static boolean[] coverage = new boolean[100];
+    public static boolean[] coverage = new boolean[37];
 
     // This is a list of possible rotation states (grid coordinates)
     public P2[][] rotations;
@@ -195,47 +195,13 @@ public class Tetromino {
             coverage[9] = true;
             current.y = p.y*Block.WIDTH;
             while(intersect(gs)) {
+                coverage[10] = true;
                 current.y -= Block.WIDTH;
             }
-//            double minX = 11;
-//            double maxX = -1;
-//            double lowY = 22;
-//            int highY = -1;
-//            double highY2 = -1;
-//            for (P2 a : this.rotations[this.rotationState]) {
-//                coverage[25] = true;
-//                if (a.x + p.x < minX) {
-//                    coverage[26] = true;
-//                    minX = a.x + p.x;
-//                }
-//                if (a.x + p.x > maxX) {
-//                    coverage[27] = true;
-//                    maxX = a.x + p.x;
-//                }
-//                highY = (a.y + p.y) > highY ? (int)(a.y + p.y) : highY;
-//                highY2 = (a.y*Block.WIDTH + current.y) > highY2 ? 
-//                        (a.y*Block.WIDTH + current.y) : highY2;
-//            }
-//            for (int i = 19; i >= highY+1; i--) {
-//                coverage[28] = true;
-//                for (int j = (int) minX; j <= (int) maxX; j++) {
-//                    coverage[29] = true;
-//                    if (gs.stack[i][j] != null) {
-//                        if (gs.stack[i][j].y < lowY) {
-//                            coverage[30] = true;
-//                            lowY = gs.stack[i][j].y;
-//                        }
-//                    }
-//                }
-//            }
-//            lowY = lowY == 22 ? 19*Block.WIDTH : (lowY-1)*Block.WIDTH;
-//            double difference = lowY - highY2;
-//            current.y += difference;
-
             return true;
         }
 
-        coverage[10] = true;
+        coverage[11] = true;
         return false;
     }
 
@@ -246,22 +212,23 @@ public class Tetromino {
      * @param gs Current Game State
      */
     public void horizontalMove(boolean d, GameState gs) {
-        coverage[11] = true;
+        coverage[12] = true;
 
         double prev = current.x;  // Previous x value
         if (d == false) {
-            coverage[12] = true;
+            coverage[13] = true;
             current.x = current.x - Block.WIDTH;
         } else if (d == true) {
-            coverage[13] = true;
+            coverage[14] = true;
             current.x = current.x + Block.WIDTH;
         }
 
         if (this.intersect(gs)) {
             // If there is an intersection
-            coverage[14] = true;
+            coverage[15] = true;
             current.x = prev;
         } else {
+            coverage[16] = true;
             gs.state = GameState.State.falling;
         }
     }
@@ -273,26 +240,27 @@ public class Tetromino {
      * @param gs The current GameState
      */
     public void rotate(boolean d, GameState gs) {
-        coverage[15] = true;
+        coverage[17] = true;
 
         int prev = this.rotationState;  // Old rotationState
 
         if (d == false) {
-            coverage[16] = true;
+            coverage[18] = true;
             this.rotationState = (this.rotationState - 1 + (this.rotations.length * 3)) % this.rotations.length;
         } else if (d == true) {
-            coverage[17] = true;
+            coverage[19] = true;
             this.rotationState = (this.rotationState + 1) % this.rotations.length;
         }
 
         if (this.intersect(gs)) {
             // If there is an intersection
-            coverage[18] = true;
+            coverage[20] = true;
             if (!kick(d, gs)) {
-                coverage[31] = true;
+                coverage[21] = true;
                 this.rotationState = prev;
             }
         } else {
+            coverage[22] = true;
             gs.state = GameState.State.falling;
         }
         // change to conditional assignment ie: http://www.cafeaulait.org/course/week2/43.html
@@ -307,28 +275,29 @@ public class Tetromino {
      * @return Is there an intersection or not
      */
     public boolean intersect(GameState gs) {
-        coverage[19] = true;
+        coverage[23] = true;
 
         P2 p = convPoint();  // Convert current to grid coordinates
 
         for (P2 a : this.rotations[this.rotationState]) {
-            coverage[20] = true;
+            coverage[24] = true;
             if (a.x + p.x < 0 || a.x + p.x >= 10 || a.y + p.y >= 20) {
                 // Check for sides and bottom
-                coverage[21] = true;
+                coverage[25] = true;
                 return true;
             }
             if ((int) (a.y + p.y) < 0) {
+                coverage[26] = true;
                 return false;
             }
             if (gs.stack[(int) (a.y + p.y)][(int) (a.x + p.x)] != null) {
                 // Check for an intsection with the Stack
-                coverage[22] = true;
+                coverage[27] = true;
                 return true;
             }
         }
 
-        coverage[23] = true;
+        coverage[28] = true;
 
         return false;
     }
@@ -342,31 +311,31 @@ public class Tetromino {
      * @return True = kick was successful; False = kick was NOT successful
      */
     public boolean kick(boolean b, GameState s) {
-        coverage[32] = true;
+        coverage[29] = true;
         P2[] transitions = {new P2(0, 0), new P2(0, 0), new P2(0, 1), new P2(0, 2)};
         if (b) {
-            coverage[33] = true;
+            coverage[30] = true;
             transitions[0] = new P2(-1, 0);
             transitions[1] = new P2(-1, -1);
         } else {
-            coverage[34] = true;
+            coverage[31] = true;
             transitions[0] = new P2(1, 0);
             transitions[1] = new P2(1, -1);
         }
 
         for (P2 t : transitions) {
-            coverage[35] = true;
+            coverage[32] = true;
             current = current.add(t.scale(Block.WIDTH));
             if (!intersect(s)) {
-                coverage[36] = true;
+                coverage[33] = true;
                 return true;
             } else {
-                coverage[37] = true;
+                coverage[34] = true;
                 current = current.add(t.scale(-Block.WIDTH));
 
             }
         }
-        coverage[38] = true;
+        coverage[35] = true;
         return false;
     }
 
@@ -376,7 +345,7 @@ public class Tetromino {
      * @return The new Point in grid coordinates
      */
     public P2 convPoint() {
-        coverage[24] = true;
+        coverage[36] = true;
         int gsx = (int) (this.current.x / Block.WIDTH);
         int gsy = (int) Math.ceil(this.current.y / Block.HEIGHT);
         return new P2(gsx, gsy);
