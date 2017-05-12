@@ -17,7 +17,6 @@
 package tetris;
 
 import java.awt.Color;
-import java.util.Random;
 
 /**
  * The methods related to game play that can be changed between different
@@ -77,7 +76,6 @@ public class GamePlay {
      */
     public void nextTet(GameState gs) {
         coverage[6] = true;
-        int rand = new Random().nextInt(7);  // Get a random number
         P2 p = new P2(Block.WIDTH*4, Block.WIDTH*(-2));  // Default starting position
         switch (rand) {
             case 0:
