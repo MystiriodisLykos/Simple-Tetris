@@ -76,6 +76,7 @@ public class GamePlay {
      */
     public void nextTet(GameState gs) {
         coverage[6] = true;
+        int rand = (int)Math.floor(Math.random()*7); //Get random using Math
         P2 p = new P2(Block.WIDTH*4, Block.WIDTH*(-2));  // Default starting position
         switch (rand) {
             case 0:
