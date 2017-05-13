@@ -16,8 +16,10 @@
  */
 package tetris;
 
-import tetris.Skins.Skin;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import tetris.Skins.Skin;
 import java.awt.Graphics;
 
 /**
@@ -32,8 +34,10 @@ public class GameState {
 
     // Enum of the posible states
     public enum State {
-        falling, locking, animation, paused
+        falling, locking, animation, paused, gameover
     }
+    
+    public int creditOffset = 0;
 
     public int score = 0;
     public int level = 0;
@@ -48,6 +52,52 @@ public class GameState {
     public Skin s;
     public Block[][] stack = new Block[20][10];
     public Tetromino currentTet;
+    
+    public String[] credits = {
+        "Thanks for Playing",
+        "",
+        "Architects:",
+        "Prof John Peterson",
+        "Brendan DeLeeuw",
+        "Mica Scheid",
+        "",
+        "Devlopers:",
+        "Lisa Howe (Geometry)",
+        "Colter Hulse (Geometry)",
+        "Asher Holloman (Game Play)",
+        "Dalton Welch (Integragtion)",
+        "Jesse Richmond (Integration)",
+        "Luke Preslar (Integration)",
+        "Tucker Small (Skin)",
+        "Caleb Smith (Skin)",
+        "Brenda Suarez (Graphics)",
+        "",
+        "Testers:",
+        "Tyler Trninich",
+        "Adam Lasswell",
+        "",
+        "Continued Developer:",
+        "Brendan DeLeeuw",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "Press Space to restart"
+    };
 
     /**
      * Constructor for GameState
@@ -84,16 +134,17 @@ public class GameState {
             } else {
                 coverage[5] = true;
                 untilLock = 20;
-                lock();
-                boolean deleted = deleteLines();
-                if (deleted) {
-                    coverage[6] = true;
-                    state = State.animation;
-                } else {
-                    coverage[7] = true;
-                    state = State.falling;
-                    gp.nextTet(this);
-                }
+                if (lock()) {
+                    boolean deleted = deleteLines();
+                    if (deleted) {
+                        coverage[6] = true;
+                        state = State.animation;
+                    } else {
+                        coverage[7] = true;
+                        state = State.falling;
+                        gp.nextTet(this);
+                    }
+                } 
             }
         }
     }
@@ -111,18 +162,20 @@ public class GameState {
     }
     
     public void drop(double gravity) {
-        coverage[10] = true;
-        double old = this.gravity;
-        this.gravity = gravity;
-        drop();
-        this.gravity = old;
+        if (this.state == State.falling) {
+            coverage[10] = true;
+            double old = this.gravity;
+            this.gravity = gravity;
+            drop();
+            this.gravity = old;
+        }
     }
 
     /**
      * Breaks apart the Tetromino into a set of blocks that are then placed into
      * the stack
      */
-    public void lock() {
+    public boolean lock() {
         coverage[11] = true;
 
         // Local grid coordinates of the blocks in the current rotation
@@ -135,8 +188,14 @@ public class GameState {
             // Global X, Y coordinate of the current block
             int x = (int) (rot[i].x + gridP.x);
             int y = (int) (rot[i].y + gridP.y);
-            stack[y][x] = new Block(x, y, currentTet.c);
+            if (y < 0) {
+                this.state = State.gameover;
+                return false;
+            } else {
+                stack[y][x] = new Block(x, y, currentTet.c);
+            }
         }
+        return true;
     }
 
     /**
@@ -250,6 +309,23 @@ public class GameState {
                 state = State.falling;
             }
         }
+        else if (this.state == State.gameover) {
+            credits(g);
+        }
+    }
+    
+    public void reset() {
+        if (state == State.gameover) {
+            this.score = 0;
+            this.level = 0;
+            this.gravity = 10;
+            this.untilLock = 10;
+            this.creditOffset = 0;
+            this.state = State.falling;
+            resetLines();
+            this.stack = new Block[20][10];
+            this.gp.nextTet(this);
+        }
     }
 
     /**
@@ -262,27 +338,25 @@ public class GameState {
             deletedLines[i] = -1;
         }
     }
-
-    /**
-     * Test function for filling the well
-     */
-//    public void testWell() {
-//        coverage[35] = true;
-//        for (int i = stack.length-1; i > 10; i--) {
-//            coverage[36] = true;
-//            for (int j = 0; j < stack[i].length; j++) {
-//                coverage[37] = true;
-//                stack[i][j] = new Block(j, i, Color.red);
-//            }
-//        }
-//    }
-
-    /**
-     * Test function for testing animation
-     */
-//    public void testAnim() {
-//        coverage[38] = true;
-//        deletedLines[0] = 3;
-//        state = State.animation;
-//    }
+    
+    public void credits(Graphics g) {
+        
+        g.setColor(new Color(0, 0, 0, 150));
+        g.fillRect(0, 0, 10*Block.WIDTH, 20*Block.HEIGHT);
+        g.setColor(Color.white);
+        
+        int fontSize = 18;
+        g.setFont(new Font("TimesRoman", Font.BOLD, fontSize));
+        FontMetrics m = g.getFontMetrics();
+        
+        for (int i = 0; i < this.credits.length; i++) {
+            String s = this.credits[i];
+            int x = (Block.WIDTH*10 - m.stringWidth(s))/2;
+            g.drawString(s, x, this.creditOffset+Block.HEIGHT*20+(i*fontSize));
+        }
+        System.out.println(this.creditOffset);
+        if (this.creditOffset > -1000) {
+            this.creditOffset -= 3;
+        }
+    }
 }

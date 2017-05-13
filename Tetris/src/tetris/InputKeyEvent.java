@@ -42,6 +42,7 @@ public class InputKeyEvent extends KeyAdapter {
             case (KeyEvent.VK_SPACE):
                 coverage[4] = true;
                 gui.gs.drop(1000);
+                gui.gs.reset();
                 break;
             case (KeyEvent.VK_R):
                 coverage[5] = true;
