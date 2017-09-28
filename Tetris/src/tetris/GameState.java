@@ -36,12 +36,12 @@ public class GameState {
     public enum State {
         falling, locking, animation, paused, gameover
     }
-    
+
     public int creditOffset = 0;
 
     public int score = 0;
     public int level = 0;
-    
+
     public double gravity = 10;
 
     public State state;
@@ -52,7 +52,7 @@ public class GameState {
     public Skin s;
     public Block[][] stack = new Block[20][10];
     public Tetromino currentTet;
-    
+
     public String[] credits = {
         "Thanks for Playing",
         "",
@@ -144,7 +144,7 @@ public class GameState {
                         state = State.falling;
                         gp.nextTet(this);
                     }
-                } 
+                }
             }
         }
     }
@@ -160,7 +160,7 @@ public class GameState {
             state = State.locking;
         }
     }
-    
+
     public void drop(double gravity) {
         if (this.state == State.falling) {
             coverage[10] = true;
@@ -291,14 +291,14 @@ public class GameState {
                             coverage[29] = true;
                             stack[i][z] = null;
                         }
-                        for (int k = i-1; k >= 0; k--) {
+                        for (int k = i - 1; k >= 0; k--) {
                             coverage[30] = true;
                             for (int j = 0; j < 10; j++) {
                                 coverage[31] = true;
                                 if (stack[k][j] != null) {
                                     coverage[32] = true;
                                     stack[k][j].y += 1;
-                                    stack[k+1][j] = stack[k][j];
+                                    stack[k + 1][j] = stack[k][j];
                                     stack[k][j] = null;
                                 }
                             }
@@ -308,12 +308,11 @@ public class GameState {
                 gp.nextTet(this);
                 state = State.falling;
             }
-        }
-        else if (this.state == State.gameover) {
+        } else if (this.state == State.gameover) {
             credits(g);
         }
     }
-    
+
     public void reset() {
         if (state == State.gameover) {
             this.score = 0;
@@ -338,21 +337,21 @@ public class GameState {
             deletedLines[i] = -1;
         }
     }
-    
+
     public void credits(Graphics g) {
-        
+
         g.setColor(new Color(0, 0, 0, 150));
-        g.fillRect(0, 0, 10*Block.WIDTH, 20*Block.HEIGHT);
+        g.fillRect(0, 0, 10 * Block.WIDTH, 20 * Block.HEIGHT);
         g.setColor(Color.white);
-        
+
         int fontSize = 18;
         g.setFont(new Font("TimesRoman", Font.BOLD, fontSize));
         FontMetrics m = g.getFontMetrics();
-        
+
         for (int i = 0; i < this.credits.length; i++) {
             String s = this.credits[i];
-            int x = (Block.WIDTH*10 - m.stringWidth(s))/2;
-            g.drawString(s, x, this.creditOffset+Block.HEIGHT*20+(i*fontSize));
+            int x = (Block.WIDTH * 10 - m.stringWidth(s)) / 2;
+            g.drawString(s, x, this.creditOffset + Block.HEIGHT * 20 + (i * fontSize));
         }
         System.out.println(this.creditOffset);
         if (this.creditOffset > -1000) {
